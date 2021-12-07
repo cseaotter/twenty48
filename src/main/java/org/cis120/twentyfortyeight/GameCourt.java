@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 
 public class GameCourt extends JPanel {
@@ -26,6 +27,9 @@ public class GameCourt extends JPanel {
         // keyboard focus, key events are handled by its key listener.
         setFocusable(true);
 
+        // Make sure that this component has the keyboard focus
+        requestFocusInWindow();
+
         numInMap(); // TODO: idk where to put it??
         testTile();
 
@@ -37,7 +41,7 @@ public class GameCourt extends JPanel {
             public void keyPressed(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-
+                    onKeyLeft();
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -52,7 +56,11 @@ public class GameCourt extends JPanel {
             }
         });
 
-        repaint();
+        //repaint();
+    }
+
+    private void onKeyLeft() {
+
     }
 
     private void numInMap() {
@@ -95,15 +103,29 @@ public class GameCourt extends JPanel {
             return;
         }
 
-        int row = (int) (4 * Math.random());
-        int col = (int) (4 * Math.random());
-
-        while (numBoard[row][col] != 0) {
-            row = (int) (4 * Math.random());
-            col = (int) (4 * Math.random());
+        int numEmpty = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (numBoard[i][j] == 0) {
+                    numEmpty++;
+                }
+            }
         }
 
-        numBoard[row][col] = 2;
+        int random = 1 + new Random().nextInt(numEmpty);
+        int temp = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (numBoard[i][j] == 0) {
+                    temp++;
+
+                    if (temp == random) {
+                        numBoard[i][j] = 2;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -112,6 +134,8 @@ public class GameCourt extends JPanel {
     public void reset() {
         // TODO: empties the board
         // TODO: randomize a 2 somewhere on the board
+        // Make sure that this component has the keyboard focus
+        requestFocusInWindow();
     }
 
     /**
