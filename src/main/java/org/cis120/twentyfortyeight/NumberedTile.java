@@ -3,7 +3,7 @@ package org.cis120.twentyfortyeight;
 import java.awt.*;
 
 public class NumberedTile extends Tile {
-    public static final int SIZE = 100;
+    public static final int SIZE = 150;
     public static final int INIT_POS_X = 0;
     public static final int INIT_POS_Y = 0;
     public static final int INIT_VEL_X = 0;

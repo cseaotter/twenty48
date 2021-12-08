@@ -6,18 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 
 public class GameCourt extends JPanel {
-    public static final int COURT_WIDTH = 400;
-    public static final int COURT_HEIGHT = 400;
+    public static final int COURT_WIDTH = 600;
+    public static final int COURT_HEIGHT = 600;
 
     private int[][] numBoard = new int[4][4];
-    private Tile[][] blocks = new Tile[4][4];
     private Map<Integer, NumberedTile> map = new HashMap<>();
 
     public GameCourt(JLabel status) {
@@ -55,103 +52,182 @@ public class GameCourt extends JPanel {
             }
 
             public void keyReleased(KeyEvent e) {
-                generateRandomTwo();
+                //generateRandomTwo();
             }
         });
 
         //repaint();
     }
 
-    private void onKeyLeft() {
+    private void onKeyLeft()  {
+        boolean hasMoved = false;
         for (int r = 0; r < 4; r++) {
+            List<Integer> temp = new ArrayList<>();
+
             for (int c = 0; c < 4; c++) {
-                int temp = c;
-                int curr = numBoard[r][temp];
-
-                while (curr != 0 && temp > 0) {
-                    int left = numBoard[r][temp - 1];
-                    if (left != 0) {
-                        break;
-                    }
-                    temp--;
+                if (numBoard[r][c] != 0) {
+                    temp.add(numBoard[r][c]);
                 }
+            }
 
-                numBoard[r][temp] = curr;
-                if (temp != c) {
+            int size = temp.size();
+            if (size != 0 && size != 4) {
+                hasMoved = true;
+            }
+
+            List<Integer> result = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
+                        result.add(temp.get(i) * 2);
+                        hasMoved = true;
+                        i++;
+                } else {
+                    result.add(temp.get(i));
+                }
+            }
+
+            for (int c = 0; c < 4; c++) {
+                if (c < result.size()) {
+                    numBoard[r][c] = result.get(c);
+                } else {
                     numBoard[r][c] = 0;
                 }
             }
         }
+
+        if (hasMoved) {
+            generateRandomTwo();
+        }
         printBoard();
     }
 
-    private void onKeyRight() {
+    private void onKeyRight()  {
+        boolean hasMoved = false;
+
         for (int r = 0; r < 4; r++) {
-            for (int c = 3; c >= 0; c--) {
-                int temp = c;
-                int curr = numBoard[r][temp];
+            List<Integer> temp = new ArrayList<>();
 
-                while (curr != 0 && temp < 3) {
-                    int right = numBoard[r][temp + 1];
-                    if (right != 0) {
-                        break;
-                    }
-                    temp++;
+            for (int c = 0; c < 4; c++) {
+                if (numBoard[r][c] != 0) {
+                    temp.add(numBoard[r][c]);
                 }
+            }
 
-                numBoard[r][temp] = curr;
-                if (temp != c) {
+            int size = temp.size();
+            if (size != 0 && size != 4) {
+                hasMoved = true;
+            }
+
+            List<Integer> result = new ArrayList<>();
+            for (int i = size - 1; i >= 0; i--) {
+                if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
+                        result.add(temp.get(i) * 2);
+                        hasMoved = true;
+                        i--;
+                } else {
+                    result.add(temp.get(i));
+                }
+            }
+            //reverse
+            for (int c = 3; c >= 0; c--) {
+                if (3 - c < result.size()) {
+                    numBoard[r][c] = result.get(3 - c);
+                } else {
                     numBoard[r][c] = 0;
                 }
             }
+        }
+
+        if (hasMoved) {
+            generateRandomTwo();
         }
         printBoard();
     }
 
     private void onKeyUp() {
+        boolean hasMoved = false;
         for (int c = 0; c < 4; c++) {
+            List<Integer> temp = new ArrayList<>();
+
             for (int r = 0; r < 4; r++) {
-                int temp = r;
-                int curr = numBoard[temp][c];
-
-                while (curr != 0 && temp > 0) {
-                    int up = numBoard[temp - 1][c];
-                    if (up != 0) {
-                        break;
-                    }
-                    temp--;
+                if (numBoard[r][c] != 0) {
+                    temp.add(numBoard[r][c]);
                 }
+            }
 
-                numBoard[temp][c] = curr;
-                if (temp != r) {
+            int size = temp.size();
+            if (size != 0 && size != 4) {
+                hasMoved = true;
+            }
+
+            List<Integer> result = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
+                    result.add(temp.get(i) * 2);
+                    hasMoved = true;
+                    i++;
+                } else {
+                    result.add(temp.get(i));
+                }
+            }
+
+            for (int r = 0; r < 4; r++) {
+                if (r < result.size()) {
+                    numBoard[r][c] = result.get(r);
+                } else {
                     numBoard[r][c] = 0;
                 }
             }
+        }
+        if (hasMoved) {
+            generateRandomTwo();
         }
         printBoard();
     }
 
     private void onKeyDown() {
+        boolean hasMoved = false;
         for (int c = 0; c < 4; c++) {
-            for (int r = 3; r >= 0; r--) {
-                int temp = r;
-                int curr = numBoard[temp][c];
+            List<Integer> temp = new ArrayList<>();
 
-                while (curr != 0 && temp < 3) {
-                    int down = numBoard[temp + 1][c];
-                    if (down != 0) {
-                        break;
-                    }
-                    temp++;
+            for (int r = 0; r < 4; r++) {
+                if (numBoard[r][c] != 0) {
+                    temp.add(numBoard[r][c]);
                 }
+            }
 
-                numBoard[temp][c] = curr;
-                if (temp != r) {
+            int size = temp.size();
+            if (size != 0 && size != 4) {
+                hasMoved = true;
+            }
+
+            List<Integer> result = new ArrayList<>();
+            for (int i = size - 1; i >= 0; i--) {
+                if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
+                    result.add(temp.get(i) * 2);
+                    hasMoved = true;
+                    i--;
+                } else {
+                    result.add(temp.get(i));
+                }
+            }
+            //reverse
+            for (int r = 3; r >= 0; r--) {
+                if (3 - r < result.size()) {
+                    numBoard[r][c] = result.get(3 - r);
+                } else {
                     numBoard[r][c] = 0;
                 }
             }
         }
+        if (hasMoved) {
+            generateRandomTwo();
+        }
         printBoard();
+    }
+
+    private void rightDownMovement(int outer, int inner) {
+
     }
 
     private void printBoard() {
@@ -194,7 +270,7 @@ public class GameCourt extends JPanel {
     }
 
     public void generateRandomTwo() {
-        if (!isFull()) {
+        if (isFull()) {
             return;
         }
 
@@ -249,19 +325,19 @@ public class GameCourt extends JPanel {
 
         // Draws board grid
         g.setColor(new Color(187, 173, 160));
-        g.drawLine(100, 0, 100, 400);
-        g.drawLine(200, 0, 200, 400);
-        g.drawLine(300, 0, 300, 400);
-        g.drawLine(0, 100, 400, 100);
-        g.drawLine(0, 200, 400, 200);
-        g.drawLine(0, 300, 400, 300);
+        g.drawLine(NumberedTile.SIZE, 0, NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+        g.drawLine(2 * NumberedTile.SIZE, 0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+        g.drawLine(3 * NumberedTile.SIZE, 0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+        g.drawLine(0, NumberedTile.SIZE, 4 * NumberedTile.SIZE, NumberedTile.SIZE);
+        g.drawLine(0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 2 * NumberedTile.SIZE);
+        g.drawLine(0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 3 * NumberedTile.SIZE);
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int num = numBoard[i][j];
                 if (num != 0) {
                     NumberedTile tile = map.get(num);
-                    tile.draw(g, j * 100, i * 100);
+                    tile.draw(g, j * NumberedTile.SIZE, i * NumberedTile.SIZE);
                 }
             }
         }
