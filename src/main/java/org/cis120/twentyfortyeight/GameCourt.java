@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -42,6 +43,7 @@ public class GameCourt extends JPanel {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     onKeyLeft();
+                    repaint();
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -60,7 +62,31 @@ public class GameCourt extends JPanel {
     }
 
     private void onKeyLeft() {
+        for (int r = 0; r < 4; r++) {
+            for (int c = 0; c < 4; c++) {
+                int temp = c;
+                int curr = numBoard[r][temp];
 
+                while (curr != 0 && temp > 0) {
+                    int left = numBoard[r][temp - 1];
+                    if (left != 0) {
+                        break;
+                    }
+                    temp--;
+                }
+
+                numBoard[r][temp] = curr;
+                if (temp != c) {
+                    numBoard[r][c] = 0;
+                }
+            }
+        }
+
+        printBoard();
+    }
+
+    private void printBoard() {
+        System.out.println("board = " + Arrays.deepToString(numBoard));
     }
 
     private void numInMap() {
