@@ -43,14 +43,15 @@ public class GameCourt extends JPanel {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                     onKeyLeft();
-                    repaint();
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-
+                    onKeyRight();
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-
+                    onKeyDown();
                 } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-
+                    onKeyUp();
                 }
+
+                repaint();
             }
 
             public void keyReleased(KeyEvent e) {
@@ -81,7 +82,75 @@ public class GameCourt extends JPanel {
                 }
             }
         }
+        printBoard();
+    }
 
+    private void onKeyRight() {
+        for (int r = 0; r < 4; r++) {
+            for (int c = 3; c >= 0; c--) {
+                int temp = c;
+                int curr = numBoard[r][temp];
+
+                while (curr != 0 && temp < 3) {
+                    int right = numBoard[r][temp + 1];
+                    if (right != 0) {
+                        break;
+                    }
+                    temp++;
+                }
+
+                numBoard[r][temp] = curr;
+                if (temp != c) {
+                    numBoard[r][c] = 0;
+                }
+            }
+        }
+        printBoard();
+    }
+
+    private void onKeyUp() {
+        for (int c = 0; c < 4; c++) {
+            for (int r = 0; r < 4; r++) {
+                int temp = r;
+                int curr = numBoard[temp][c];
+
+                while (curr != 0 && temp > 0) {
+                    int up = numBoard[temp - 1][c];
+                    if (up != 0) {
+                        break;
+                    }
+                    temp--;
+                }
+
+                numBoard[temp][c] = curr;
+                if (temp != r) {
+                    numBoard[r][c] = 0;
+                }
+            }
+        }
+        printBoard();
+    }
+
+    private void onKeyDown() {
+        for (int c = 0; c < 4; c++) {
+            for (int r = 3; r >= 0; r--) {
+                int temp = r;
+                int curr = numBoard[temp][c];
+
+                while (curr != 0 && temp < 3) {
+                    int down = numBoard[temp + 1][c];
+                    if (down != 0) {
+                        break;
+                    }
+                    temp++;
+                }
+
+                numBoard[temp][c] = curr;
+                if (temp != r) {
+                    numBoard[r][c] = 0;
+                }
+            }
+        }
         printBoard();
     }
 
