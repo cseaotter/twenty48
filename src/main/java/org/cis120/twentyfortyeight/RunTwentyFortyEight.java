@@ -3,9 +3,16 @@ import org.cis120.twentyfortyeight.GameCourt;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.nio.file.Paths;
 import javax.swing.*;
 
-public class RunTwentyFortyEight implements Runnable {
+
+public class RunTwentyFortyEight implements Runnable, ScoreListener {
+    static final String PATH_TO_OUTPUT = "highest_score.txt";
+    private int highestScore;
+
+
     public void run() {
         // NOTE : recall that the 'final' keyword notes immutability even for
         // local variables.
@@ -23,6 +30,7 @@ public class RunTwentyFortyEight implements Runnable {
 
         // Main playing area
         final org.cis120.twentyfortyeight.GameCourt court = new GameCourt(status);
+        court.addScoreListener(this);
         frame.add(court, BorderLayout.CENTER);
 
         // Reset button
@@ -41,6 +49,38 @@ public class RunTwentyFortyEight implements Runnable {
         });
         control_panel.add(reset);
 
+
+        // highest score tracker
+        File tempFile = new File(PATH_TO_OUTPUT);
+        if (tempFile.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(PATH_TO_OUTPUT));
+                String str = br.readLine();
+                try {
+                    highestScore = Integer.valueOf(str);
+                } catch (NumberFormatException e){
+                    highestScore = 0;
+                }
+                    System.out.println("curr = " + court.getCurr() + ", highest = " + highestScore);
+                    //updateHighestScore(court);
+                br.close();
+                //}
+                //JLabel highestScore = new JLabel("Highest Score = " + highest.read());
+            } catch (FileNotFoundException e) {
+                System.out.println("Ran into FileNotFound Exception");
+            } catch (IOException e) {
+                System.out.println("Ran into I/O Exception1");
+            }
+        } else {
+            try {
+                tempFile.createNewFile();
+                //JLabel highestScore = new JLabel("Highest Score = " + currScore);
+            } catch (IOException e) {
+                System.out.println("Ran into I/O Exception2");
+            }
+        }
+
+
         // Put the frame on the screen
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,5 +88,29 @@ public class RunTwentyFortyEight implements Runnable {
 
         // Start game
         court.reset();
+    }
+
+    private void updateHighestScore() {
+        File file = Paths.get(PATH_TO_OUTPUT).toFile();
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(file));
+            String str = Integer.toString(highestScore);
+            bw.write(str);
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("Ran into I/O Exception3");
+        }
+    }
+
+    @Override
+    public void onUpdate(int currScore) {
+        if (currScore > highestScore) {
+            highestScore = currScore;
+            System.out.println("Curr = " + currScore + ", High = " + highestScore);
+            updateHighestScore();
+            //System.out.println("Curr = " + currScore + ", High = " + highestScore);
+        }
     }
 }

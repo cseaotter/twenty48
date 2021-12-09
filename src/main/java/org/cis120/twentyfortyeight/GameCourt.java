@@ -17,6 +17,9 @@ public class GameCourt extends JPanel {
     private int[][] numBoard = new int[4][4];
     private Map<Integer, NumberedTile> map = new HashMap<>();
 
+    private int currScore;
+    private ScoreListener listener;
+
     public GameCourt(JLabel status) {
         // creates border around the court area, JComponent method
         setBorder(BorderFactory.createLineBorder(new Color(187, 173, 160)));
@@ -59,6 +62,15 @@ public class GameCourt extends JPanel {
         //repaint();
     }
 
+    public void addScoreListener(ScoreListener listener) {
+        this.listener = listener;
+    }
+
+    public int getCurr() {
+      return currScore;
+    }
+
+
     private void onKeyLeft()  {
         boolean hasMoved = false;
         for (int r = 0; r < 4; r++) {
@@ -67,6 +79,9 @@ public class GameCourt extends JPanel {
             for (int c = 0; c < 4; c++) {
                 if (numBoard[r][c] != 0) {
                     temp.add(numBoard[r][c]);
+                    if (temp.size() != c) {
+                        hasMoved = true;
+                    }
                 }
             }
 
@@ -80,6 +95,8 @@ public class GameCourt extends JPanel {
                 if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
                         result.add(temp.get(i) * 2);
                         hasMoved = true;
+                        currScore += temp.get(i) * 2;
+                        listener.onUpdate(currScore);
                         i++;
                 } else {
                     result.add(temp.get(i));
@@ -121,9 +138,11 @@ public class GameCourt extends JPanel {
             List<Integer> result = new ArrayList<>();
             for (int i = size - 1; i >= 0; i--) {
                 if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
-                        result.add(temp.get(i) * 2);
-                        hasMoved = true;
-                        i--;
+                    result.add(temp.get(i) * 2);
+                    currScore += temp.get(i) * 2;
+                    listener.onUpdate(currScore);
+                    hasMoved = true;
+                    i--;
                 } else {
                     result.add(temp.get(i));
                 }
@@ -164,6 +183,8 @@ public class GameCourt extends JPanel {
             for (int i = 0; i < size; i++) {
                 if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
                     result.add(temp.get(i) * 2);
+                    currScore += temp.get(i) * 2;
+                    listener.onUpdate(currScore);
                     hasMoved = true;
                     i++;
                 } else {
@@ -205,6 +226,8 @@ public class GameCourt extends JPanel {
             for (int i = size - 1; i >= 0; i--) {
                 if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
                     result.add(temp.get(i) * 2);
+                    currScore += temp.get(i) * 2;
+                    listener.onUpdate(currScore);
                     hasMoved = true;
                     i--;
                 } else {
@@ -226,9 +249,6 @@ public class GameCourt extends JPanel {
         printBoard();
     }
 
-    private void rightDownMovement(int outer, int inner) {
-
-    }
 
     private void printBoard() {
         System.out.println("board = " + Arrays.deepToString(numBoard));
