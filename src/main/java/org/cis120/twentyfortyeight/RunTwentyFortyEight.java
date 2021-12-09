@@ -11,6 +11,8 @@ import javax.swing.*;
 public class RunTwentyFortyEight implements Runnable, ScoreListener {
     static final String PATH_TO_OUTPUT = "highest_score.txt";
     private int highestScore;
+    private JLabel highScoreLabel;
+    private JLabel currScoreLabel;
 
 
     public void run() {
@@ -37,6 +39,8 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         final JPanel control_panel = new JPanel();
         frame.add(control_panel, BorderLayout.NORTH);
 
+        readHighScore();
+
         // Note here that when we add an action listener to the reset button, we
         // define it as an anonymous inner class that is an instance of
         // ActionListener with its actionPerformed() method overridden. When the
@@ -47,9 +51,24 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 court.reset();
             }
         });
-        control_panel.add(reset);
+        highScoreLabel = new JLabel("Highest Score: " + highestScore);
+        currScoreLabel = new JLabel("Current Score: " + 0);
+
+        control_panel.add(highScoreLabel, BorderLayout.WEST); // left
+        control_panel.add(reset, BorderLayout.CENTER);
+        control_panel.add(currScoreLabel, BorderLayout.EAST); // right
 
 
+        // Put the frame on the screen
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        // Start game
+        court.reset();
+    }
+
+    private void readHighScore() {
         // highest score tracker
         File tempFile = new File(PATH_TO_OUTPUT);
         if (tempFile.exists()) {
@@ -61,8 +80,8 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 } catch (NumberFormatException e){
                     highestScore = 0;
                 }
-                    System.out.println("curr = " + court.getCurr() + ", highest = " + highestScore);
-                    //updateHighestScore(court);
+                System.out.println("highest = " + highestScore);
+                //updateHighestScore(court);
                 br.close();
                 //}
                 //JLabel highestScore = new JLabel("Highest Score = " + highest.read());
@@ -79,15 +98,6 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 System.out.println("Ran into I/O Exception2");
             }
         }
-
-
-        // Put the frame on the screen
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-
-        // Start game
-        court.reset();
     }
 
     private void updateHighestScore() {
@@ -106,10 +116,12 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
 
     @Override
     public void onUpdate(int currScore) {
+        currScoreLabel.setText("Current Score: " + currScore);
         if (currScore > highestScore) {
             highestScore = currScore;
             System.out.println("Curr = " + currScore + ", High = " + highestScore);
             updateHighestScore();
+            highScoreLabel.setText("Highest Score: " + highestScore);
             //System.out.println("Curr = " + currScore + ", High = " + highestScore);
         }
     }
