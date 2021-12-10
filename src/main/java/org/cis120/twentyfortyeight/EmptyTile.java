@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 /**
- * EmptyTile is a subtype of Tile class. EmptyTile are responsible for empty tiles and draw the empty tiles with
- * white color on the position according to their offset values.
+ * EmptyTile is a subtype of Tile class. EmptyTile are responsible for empty tiles and draw the
+ * empty tiles with white color on the position according to their offset values.
  */
 public class EmptyTile extends Tile {
     public static final int SIZE = 150;

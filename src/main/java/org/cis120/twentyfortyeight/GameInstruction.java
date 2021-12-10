@@ -21,11 +21,12 @@ public class GameInstruction implements Runnable {
         final JPanel instructorPanel = new JPanel();
         frame.add(instructorPanel, BorderLayout.CENTER);
 
-        JLabel label = new JLabel("<html>Welcome to 2048!<br>" + "<br>"
-                + "Instructions:<br>"
+        JLabel label = new JLabel("<html>Welcome to 2048!<br>" + "<br>" + "Instructions:<br>"
                 + "1. Press start game button to start the game<br>"
-                + "2. Use keyboard directions (eg: up) to move the numbered tiles in the direction you want<br>"
-                + "3. When two tiles with the same number collide, they merge into one tile with their sum<br>"
+                + "2. Use keyboard directions (eg: up) to move the numbered tiles in the direction"
+                + " you want<br>"
+                + "3. When two tiles with the same number collide, they merge into one tile with "
+                + "their sum<br>"
                 + "4. When you cannot move any tiles, you lose<br>"
                 + "5. You can press the reset button to reset the game</html>");
 

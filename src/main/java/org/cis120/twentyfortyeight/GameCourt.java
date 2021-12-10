@@ -19,9 +19,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
- * The GameCourt class implements the overall game logic and event-handling from the GUI. There is also the
- * logic of how to calculate and update scores and the numbers in the squares. It handles keyboard
- * events (eg: up) to trigger board updates.
+ * The GameCourt class implements the overall game logic and event-handling from the GUI.
+ * There is also the logic of how to calculate and update scores and the numbers in the squares.
+ * It handles keyboard events (eg: up) to trigger board updates.
  */
 public class GameCourt extends JPanel {
     public static final int COURT_WIDTH = 600;
