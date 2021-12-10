@@ -1,12 +1,22 @@
 package org.cis120.twentyfortyeight;
 
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Random;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
 
 public class GameCourt extends JPanel {
@@ -15,7 +25,7 @@ public class GameCourt extends JPanel {
     public static final int THICKNESS = 5;
 
     private int[][] numBoard = new int[4][4];
-    private Map<Integer, NumberedTile> map = new HashMap<>();
+    private Map<Integer, Tile> map = new HashMap<>();
 
     private int currScore;
     private ScoreListener listener;
@@ -165,6 +175,7 @@ public class GameCourt extends JPanel {
 
 
     private void numInMap() {
+        map.put(0, new EmptyTile());
         map.put(2, new NumberedTile(new Color(238, 228, 218), 2));
         map.put(4, new NumberedTile(new Color(236, 204, 202), 4));
         map.put(8, new NumberedTile(new Color(242, 177, 121), 8));
@@ -291,10 +302,8 @@ public class GameCourt extends JPanel {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int num = numBoard[i][j];
-                if (num != 0) {
-                    NumberedTile tile = map.get(num);
-                    tile.draw(g, j * NumberedTile.SIZE, i * NumberedTile.SIZE);
-                }
+                Tile tile = map.get(num);
+                tile.draw(g, j * NumberedTile.SIZE, i * NumberedTile.SIZE);
             }
         }
         g.setColor(new Color(187, 173, 160));
