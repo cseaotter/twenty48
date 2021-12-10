@@ -1,7 +1,5 @@
 package org.cis120.twentyfortyeight;
 
-import org.cis120.twentyfortyeight.Direction;
-
 import java.awt.*;
 
 public abstract class Tile {
@@ -33,7 +31,7 @@ public abstract class Tile {
     /**
      * Constructor
      */
-    public Tile (
+    public Tile(
             int vx, int vy, int px, int py, int size, int courtWidth,
             int courtHeight
     ) {
@@ -119,7 +117,6 @@ public abstract class Tile {
 
         clip();
     }
-
 
 
     /**

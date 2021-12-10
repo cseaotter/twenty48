@@ -12,7 +12,7 @@ public class NumberedTile extends Tile {
     private Color color;
     private int number;
 
-    public NumberedTile (int courtWidth, int courtHeight, Color color, int number) {
+    public NumberedTile(int courtWidth, int courtHeight, Color color, int number) {
         super(INIT_VEL_X, INIT_VEL_Y, INIT_POS_X, INIT_POS_Y, SIZE, courtWidth, courtHeight);
         this.color = color;
         this.number = number;
@@ -26,7 +26,12 @@ public class NumberedTile extends Tile {
         g.fillRect(this.getPx(), this.getPy(), this.getSize(), this.getSize());
         g.setColor(Color.BLACK);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 27));
-        g.drawString(String.valueOf(number), getPx() + SIZE / 2, getPy() + SIZE / 2);
-
+        FontMetrics metrics = g.getFontMetrics();
+        int width = metrics.stringWidth(String.valueOf(number));
+        int height = metrics.getHeight();
+        String text = String.valueOf(number);
+        g.drawString(text, getPx() + (SIZE - width) / 2, getPy() + (SIZE + height) / 2);
+        System.out.println("width = " + width + ", height = " + height + ", size = " + SIZE);
+        System.out.println("offsetY = " + offsetY);
     }
 }

@@ -1,18 +1,18 @@
 package org.cis120.twentyfortyeight;
 
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 public class GameCourt extends JPanel {
     public static final int COURT_WIDTH = 600;
     public static final int COURT_HEIGHT = 600;
+    public static final int THICKNESS = 5;
 
     private int[][] numBoard = new int[4][4];
     private Map<Integer, NumberedTile> map = new HashMap<>();
@@ -42,13 +42,17 @@ public class GameCourt extends JPanel {
             public void keyPressed(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    onKeyLeft(numBoard);
+                    onKeyLeft(numBoard, false);
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    onKeyRight(numBoard);
+                    onKeyRight(numBoard, false);
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    onKeyDown(numBoard);
+                    onKeyDown(numBoard, false);
                 } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    onKeyUp(numBoard);
+                    onKeyUp(numBoard, false);
+                }
+
+                if (hasLost()) {
+                    listener.result("You lose!");
                 }
 
                 repaint();
@@ -71,7 +75,7 @@ public class GameCourt extends JPanel {
         }
     }
 
-    private void onKeyLeft(int[][] numBoard)  {
+    private void onKeyLeft(int[][] numBoard, boolean detect) {
         boolean hasMoved = false;
         for (int r = 0; r < 4; r++) {
             List<Integer> temp = new ArrayList<>();
@@ -90,11 +94,14 @@ public class GameCourt extends JPanel {
             List<Integer> result = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 if (i + 1 < size && temp.get(i).equals(temp.get(i + 1))) {
-                        result.add(temp.get(i) * 2);
-                        hasMoved = true;
-                        currScore += temp.get(i) * 2;
+                    int mergedNum = temp.get(i) * 2;
+                    result.add(mergedNum);
+                    hasMoved = true;
+                    if (!detect) {
+                        currScore += mergedNum;
                         listener.onUpdate(currScore);
-                        i++;
+                    }
+                    i++;
                 } else {
                     result.add(temp.get(i));
                 }
@@ -115,21 +122,21 @@ public class GameCourt extends JPanel {
         printBoard();
     }
 
-    private void onKeyRight(int[][] numBoard) {
+    private void onKeyRight(int[][] numBoard, boolean detect) {
         rotateDown(numBoard);
-        onKeyLeft(numBoard);
+        onKeyLeft(numBoard, detect);
         rotateDown(numBoard);
     }
 
-    private void onKeyUp(int[][] numBoard) {
+    private void onKeyUp(int[][] numBoard, boolean detect) {
         rotateLeft(numBoard);
-        onKeyLeft(numBoard);
+        onKeyLeft(numBoard, detect);
         rotateRight(numBoard);
     }
 
-    private void onKeyDown(int[][] numBoard) {
+    private void onKeyDown(int[][] numBoard, boolean detect) {
         rotateRight(numBoard);
-        onKeyLeft(numBoard);
+        onKeyLeft(numBoard, detect);
         rotateLeft(numBoard);
     }
 
@@ -191,6 +198,7 @@ public class GameCourt extends JPanel {
 
     /**
      * Everywhere on the 4x4 board is filled with a number
+     *
      * @return
      */
     private boolean isFull() {
@@ -218,10 +226,10 @@ public class GameCourt extends JPanel {
 
         System.out.println("in");
 
-        onKeyLeft(temp);
-        onKeyRight(temp);
-        onKeyDown(temp);
-        onKeyUp(temp);
+        onKeyLeft(temp, true);
+        onKeyRight(temp, true);
+        onKeyDown(temp, true);
+        onKeyUp(temp, true);
 
         if (!Arrays.deepEquals(temp, numBoard)) {
             return false;
@@ -274,7 +282,7 @@ public class GameCourt extends JPanel {
 
     /**
      * Draws the game board.
-     *
+     * <p>
      * There are many ways to draw a game board. This approach
      * will not be sufficient for most games, because it is not
      * modular. All of the logic for drawing the game board is
@@ -288,12 +296,13 @@ public class GameCourt extends JPanel {
 
         // Draws board grid
         g.setColor(new Color(187, 173, 160));
-        g.drawLine(NumberedTile.SIZE, 0, NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-        g.drawLine(2 * NumberedTile.SIZE, 0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-        g.drawLine(3 * NumberedTile.SIZE, 0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-        g.drawLine(0, NumberedTile.SIZE, 4 * NumberedTile.SIZE, NumberedTile.SIZE);
-        g.drawLine(0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 2 * NumberedTile.SIZE);
-        g.drawLine(0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 3 * NumberedTile.SIZE);
+//        g.drawLine(NumberedTile.SIZE, 0, NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+//        g.drawLine(2 * NumberedTile.SIZE, 0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+//        g.drawLine(3 * NumberedTile.SIZE, 0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+//        g.drawLine(0, NumberedTile.SIZE, 4 * NumberedTile.SIZE, NumberedTile.SIZE);
+//        g.drawLine(0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 2 * NumberedTile.SIZE);
+//        g.drawLine(0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 3 * NumberedTile.SIZE);
+
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -303,6 +312,13 @@ public class GameCourt extends JPanel {
                     tile.draw(g, j * NumberedTile.SIZE, i * NumberedTile.SIZE);
                 }
             }
+        }
+        g.setColor(new Color(187, 173, 160));
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(THICKNESS));
+        for (int i = 0; i < 5; i++) {
+            g.drawLine(i * NumberedTile.SIZE, 0, i * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
+            g.drawLine(0, i * NumberedTile.SIZE, 4 * NumberedTile.SIZE, i * NumberedTile.SIZE);
         }
     }
 

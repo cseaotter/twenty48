@@ -1,11 +1,11 @@
 package org.cis120.twentyfortyeight;
-import org.cis120.twentyfortyeight.GameCourt;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Paths;
-import javax.swing.*;
 
 
 public class RunTwentyFortyEight implements Runnable, ScoreListener {
@@ -44,7 +44,6 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         readHighScore(court);
 
 
-
         // Note here that when we add an action listener to the reset button, we
         // define it as an anonymous inner class that is an instance of
         // ActionListener with its actionPerformed() method overridden. When the
@@ -73,7 +72,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         }
 
         // Start game
-        //court.reset();
+        court.reset();
     }
 
     private void readHighScore(GameCourt court) {
@@ -85,7 +84,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 String str = br.readLine();
                 try {
                     highestScore = Integer.valueOf(str);
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     highestScore = 0;
                 }
                 int[][] board = new int[4][4];
@@ -141,5 +140,10 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
             highScoreLabel.setText("Highest Score: " + highestScore);
             //System.out.println("Curr = " + currScore + ", High = " + highestScore);
         }
+    }
+
+    @Override
+    public void result(String res) {
+        status.setText(res);
     }
 }
