@@ -13,6 +13,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
     private int highestScore;
     private JLabel highScoreLabel;
     private JLabel currScoreLabel;
+    private JLabel status;
 
 
     public void run() {
@@ -27,7 +28,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         // Status panel
         final JPanel status_panel = new JPanel();
         frame.add(status_panel, BorderLayout.SOUTH);
-        final JLabel status = new JLabel("Running...");
+        status = new JLabel("Running...");
         status_panel.add(status);
 
         // Main playing area
@@ -35,11 +36,14 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         court.addScoreListener(this);
         frame.add(court, BorderLayout.CENTER);
 
+
         // Reset button
         final JPanel control_panel = new JPanel();
         frame.add(control_panel, BorderLayout.NORTH);
 
-        readHighScore();
+        readHighScore(court);
+
+
 
         // Note here that when we add an action listener to the reset button, we
         // define it as an anonymous inner class that is an instance of
@@ -64,11 +68,15 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+        if (court.hasLost()) {
+            status.setText("You lose!");
+        }
+
         // Start game
-        court.reset();
+        //court.reset();
     }
 
-    private void readHighScore() {
+    private void readHighScore(GameCourt court) {
         // highest score tracker
         File tempFile = new File(PATH_TO_OUTPUT);
         if (tempFile.exists()) {
@@ -80,6 +88,15 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 } catch (NumberFormatException e){
                     highestScore = 0;
                 }
+                int[][] board = new int[4][4];
+                for (int i = 0; i < 4; i++) {
+                    str = br.readLine();
+                    String[] array = str.split(",");
+                    for (int j = 0; j < 4; j++) {
+                        board[i][j] = Integer.valueOf(array[j]);
+                    }
+                }
+                court.readUserData(board);
                 System.out.println("highest = " + highestScore);
                 //updateHighestScore(court);
                 br.close();

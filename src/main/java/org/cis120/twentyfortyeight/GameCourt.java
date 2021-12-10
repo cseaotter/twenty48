@@ -42,36 +42,36 @@ public class GameCourt extends JPanel {
             public void keyPressed(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    onKeyLeft();
+                    onKeyLeft(numBoard);
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    onKeyRight();
+                    onKeyRight(numBoard);
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    onKeyDown();
+                    onKeyDown(numBoard);
                 } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    onKeyUp();
+                    onKeyUp(numBoard);
                 }
 
                 repaint();
             }
 
             public void keyReleased(KeyEvent e) {
-                //generateRandomTwo();
             }
         });
-
-        //repaint();
     }
 
     public void addScoreListener(ScoreListener listener) {
         this.listener = listener;
     }
 
-    public int getCurr() {
-      return currScore;
+    public void readUserData(int[][] board) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                numBoard[i][j] = board[i][j];
+            }
+        }
     }
 
-
-    private void onKeyLeft()  {
+    private void onKeyLeft(int[][] numBoard)  {
         boolean hasMoved = false;
         for (int r = 0; r < 4; r++) {
             List<Integer> temp = new ArrayList<>();
@@ -79,20 +79,17 @@ public class GameCourt extends JPanel {
             for (int c = 0; c < 4; c++) {
                 if (numBoard[r][c] != 0) {
                     temp.add(numBoard[r][c]);
-                    if (temp.size() != c) {
+                    if (temp.size() - 1 != c) {
                         hasMoved = true;
                     }
                 }
             }
 
             int size = temp.size();
-            if (size != 0 && size != 4) {
-                hasMoved = true;
-            }
 
             List<Integer> result = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
+                if (i + 1 < size && temp.get(i).equals(temp.get(i + 1))) {
                         result.add(temp.get(i) * 2);
                         hasMoved = true;
                         currScore += temp.get(i) * 2;
@@ -118,135 +115,54 @@ public class GameCourt extends JPanel {
         printBoard();
     }
 
-    private void onKeyRight()  {
-        boolean hasMoved = false;
-
-        for (int r = 0; r < 4; r++) {
-            List<Integer> temp = new ArrayList<>();
-
-            for (int c = 0; c < 4; c++) {
-                if (numBoard[r][c] != 0) {
-                    temp.add(numBoard[r][c]);
-                }
-            }
-
-            int size = temp.size();
-            if (size != 0 && size != 4) {
-                hasMoved = true;
-            }
-
-            List<Integer> result = new ArrayList<>();
-            for (int i = size - 1; i >= 0; i--) {
-                if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
-                    result.add(temp.get(i) * 2);
-                    currScore += temp.get(i) * 2;
-                    listener.onUpdate(currScore);
-                    hasMoved = true;
-                    i--;
-                } else {
-                    result.add(temp.get(i));
-                }
-            }
-            //reverse
-            for (int c = 3; c >= 0; c--) {
-                if (3 - c < result.size()) {
-                    numBoard[r][c] = result.get(3 - c);
-                } else {
-                    numBoard[r][c] = 0;
-                }
-            }
-        }
-
-        if (hasMoved) {
-            generateRandomTwo();
-        }
-        printBoard();
+    private void onKeyRight(int[][] numBoard) {
+        rotateDown(numBoard);
+        onKeyLeft(numBoard);
+        rotateDown(numBoard);
     }
 
-    private void onKeyUp() {
-        boolean hasMoved = false;
-        for (int c = 0; c < 4; c++) {
-            List<Integer> temp = new ArrayList<>();
-
-            for (int r = 0; r < 4; r++) {
-                if (numBoard[r][c] != 0) {
-                    temp.add(numBoard[r][c]);
-                }
-            }
-
-            int size = temp.size();
-            if (size != 0 && size != 4) {
-                hasMoved = true;
-            }
-
-            List<Integer> result = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                if (i + 1 < size && temp.get(i) == temp.get(i + 1)) {
-                    result.add(temp.get(i) * 2);
-                    currScore += temp.get(i) * 2;
-                    listener.onUpdate(currScore);
-                    hasMoved = true;
-                    i++;
-                } else {
-                    result.add(temp.get(i));
-                }
-            }
-
-            for (int r = 0; r < 4; r++) {
-                if (r < result.size()) {
-                    numBoard[r][c] = result.get(r);
-                } else {
-                    numBoard[r][c] = 0;
-                }
-            }
-        }
-        if (hasMoved) {
-            generateRandomTwo();
-        }
-        printBoard();
+    private void onKeyUp(int[][] numBoard) {
+        rotateLeft(numBoard);
+        onKeyLeft(numBoard);
+        rotateRight(numBoard);
     }
 
-    private void onKeyDown() {
-        boolean hasMoved = false;
-        for (int c = 0; c < 4; c++) {
-            List<Integer> temp = new ArrayList<>();
+    private void onKeyDown(int[][] numBoard) {
+        rotateRight(numBoard);
+        onKeyLeft(numBoard);
+        rotateLeft(numBoard);
+    }
 
-            for (int r = 0; r < 4; r++) {
-                if (numBoard[r][c] != 0) {
-                    temp.add(numBoard[r][c]);
-                }
-            }
+    private void rotateRight(int[][] board) {
+        int rows = board.length;
+        int cols = board[0].length;
 
-            int size = temp.size();
-            if (size != 0 && size != 4) {
-                hasMoved = true;
-            }
+        int[][] temp = new int[rows][cols];
 
-            List<Integer> result = new ArrayList<>();
-            for (int i = size - 1; i >= 0; i--) {
-                if (i - 1 >= 0 && temp.get(i) == temp.get(i - 1)) {
-                    result.add(temp.get(i) * 2);
-                    currScore += temp.get(i) * 2;
-                    listener.onUpdate(currScore);
-                    hasMoved = true;
-                    i--;
-                } else {
-                    result.add(temp.get(i));
-                }
-            }
-            //reverse
-            for (int r = 3; r >= 0; r--) {
-                if (3 - r < result.size()) {
-                    numBoard[r][c] = result.get(3 - r);
-                } else {
-                    numBoard[r][c] = 0;
-                }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int data = board[i][j];
+                temp[j][rows - i - 1] = data;
             }
         }
-        if (hasMoved) {
-            generateRandomTwo();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                board[i][j] = temp[i][j];
+            }
         }
-        printBoard();
+    }
+
+    private void rotateLeft(int[][] board) {
+        for (int i = 0; i < 3; i++) {
+            rotateRight(board);
+        }
+    }
+
+    private void rotateDown(int[][] board) {
+        for (int i = 0; i < 2; i++) {
+            rotateRight(board);
+        }
     }
 
 
@@ -285,6 +201,33 @@ public class GameCourt extends JPanel {
                 }
             }
         }
+        return true;
+    }
+
+    public boolean hasLost() {
+        if (!isFull()) {
+            return false;
+        }
+
+        int[][] temp = new int[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                temp[i][j] = numBoard[i][j];
+            }
+        }
+
+        System.out.println("in");
+
+        onKeyLeft(temp);
+        onKeyRight(temp);
+        onKeyDown(temp);
+        onKeyUp(temp);
+
+        if (!Arrays.deepEquals(temp, numBoard)) {
+            return false;
+        }
+
+        System.out.println("in2");
 
         return true;
     }
