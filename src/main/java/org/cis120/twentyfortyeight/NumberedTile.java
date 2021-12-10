@@ -6,14 +6,12 @@ public class NumberedTile extends Tile {
     public static final int SIZE = 150;
     public static final int INIT_POS_X = 0;
     public static final int INIT_POS_Y = 0;
-    public static final int INIT_VEL_X = 0;
-    public static final int INIT_VEL_Y = 0;
 
     private Color color;
     private int number;
 
-    public NumberedTile(int courtWidth, int courtHeight, Color color, int number) {
-        super(INIT_VEL_X, INIT_VEL_Y, INIT_POS_X, INIT_POS_Y, SIZE, courtWidth, courtHeight);
+    public NumberedTile(Color color, int number) {
+        super(INIT_POS_X, INIT_POS_Y, SIZE);
         this.color = color;
         this.number = number;
     }
@@ -31,7 +29,5 @@ public class NumberedTile extends Tile {
         int height = metrics.getHeight();
         String text = String.valueOf(number);
         g.drawString(text, getPx() + (SIZE - width) / 2, getPy() + (SIZE + height) / 2);
-        System.out.println("width = " + width + ", height = " + height + ", size = " + SIZE);
-        System.out.println("offsetY = " + offsetY);
     }
 }

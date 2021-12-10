@@ -1,7 +1,5 @@
 package org.cis120;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 public class Game {
@@ -11,11 +9,7 @@ public class Game {
      * include a main method in your final submission.
      */
     public static void main(String[] args) {
-
         Runnable game = new org.cis120.twentyfortyeight.RunTwentyFortyEight();
-        //Runnable game = new org.cis120.tictactoe.RunTicTacToe();
-        // Runnable game = new org.cis120.mushroom.RunMushroomOfDoom(); // Set the game you want to run
-                                                                     // here
         SwingUtilities.invokeLater(game);
     }
 }

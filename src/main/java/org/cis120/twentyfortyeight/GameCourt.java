@@ -20,7 +20,7 @@ public class GameCourt extends JPanel {
     private int currScore;
     private ScoreListener listener;
 
-    public GameCourt(JLabel status) {
+    public GameCourt() {
         // creates border around the court area, JComponent method
         setBorder(BorderFactory.createLineBorder(new Color(187, 173, 160)));
 
@@ -32,7 +32,7 @@ public class GameCourt extends JPanel {
         requestFocusInWindow();
 
         numInMap(); // TODO: idk where to put it??
-        testTile();
+        initialBoard();
 
         // This key listener allows the square to move as long as an arrow key
         // is pressed, by changing the square's velocity accordingly. (The tick
@@ -65,14 +65,6 @@ public class GameCourt extends JPanel {
 
     public void addScoreListener(ScoreListener listener) {
         this.listener = listener;
-    }
-
-    public void readUserData(int[][] board) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                numBoard[i][j] = board[i][j];
-            }
-        }
     }
 
     private void onKeyLeft(int[][] numBoard, boolean detect) {
@@ -119,7 +111,6 @@ public class GameCourt extends JPanel {
         if (hasMoved) {
             generateRandomTwo();
         }
-        printBoard();
     }
 
     private void onKeyRight(int[][] numBoard, boolean detect) {
@@ -173,33 +164,29 @@ public class GameCourt extends JPanel {
     }
 
 
-    private void printBoard() {
-        System.out.println("board = " + Arrays.deepToString(numBoard));
-    }
-
     private void numInMap() {
-        map.put(2, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(238, 228, 218), 2));
-        map.put(4, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(236, 204, 202), 4));
-        map.put(8, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(242, 177, 121), 8));
-        map.put(16, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(245, 149, 101), 16));
-        map.put(32, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(245, 124, 95), 32));
-        map.put(64, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(246, 93, 59), 64));
-        map.put(128, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(237, 206, 113), 128));
-        map.put(256, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(237, 204, 99), 256));
-        map.put(512, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(228, 192, 42), 512));
-        map.put(1024, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(239, 197, 63), 1024));
-        map.put(2048, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(238, 194, 46), 2048));
-        map.put(4096, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(103, 214, 145), 4096));
-        map.put(8192, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(39, 187, 103), 8192));
-        map.put(16384, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(35, 140, 81), 16384));
-        map.put(32768, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(77, 171, 0), 32768));
-        map.put(65536, new NumberedTile(COURT_WIDTH, COURT_HEIGHT, new Color(69, 140, 2), 65536));
+        map.put(2, new NumberedTile(new Color(238, 228, 218), 2));
+        map.put(4, new NumberedTile(new Color(236, 204, 202), 4));
+        map.put(8, new NumberedTile(new Color(242, 177, 121), 8));
+        map.put(16, new NumberedTile(new Color(245, 149, 101), 16));
+        map.put(32, new NumberedTile(new Color(245, 124, 95), 32));
+        map.put(64, new NumberedTile(new Color(246, 93, 59), 64));
+        map.put(128, new NumberedTile(new Color(237, 206, 113), 128));
+        map.put(256, new NumberedTile(new Color(237, 204, 99), 256));
+        map.put(512, new NumberedTile(new Color(228, 192, 42), 512));
+        map.put(1024, new NumberedTile(new Color(239, 197, 63), 1024));
+        map.put(2048, new NumberedTile(new Color(238, 194, 46), 2048));
+        map.put(4096, new NumberedTile(new Color(103, 214, 145), 4096));
+        map.put(8192, new NumberedTile(new Color(39, 187, 103), 8192));
+        map.put(16384, new NumberedTile(new Color(35, 140, 81), 16384));
+        map.put(32768, new NumberedTile(new Color(77, 171, 0), 32768));
+        map.put(65536, new NumberedTile(new Color(69, 140, 2), 65536));
     }
 
     /**
      * Everywhere on the 4x4 board is filled with a number
      *
-     * @return
+     * @return true if the board is full
      */
     private boolean isFull() {
         for (int i = 0; i < 4; i++) {
@@ -224,8 +211,6 @@ public class GameCourt extends JPanel {
             }
         }
 
-        System.out.println("in");
-
         onKeyLeft(temp, true);
         onKeyRight(temp, true);
         onKeyDown(temp, true);
@@ -234,8 +219,6 @@ public class GameCourt extends JPanel {
         if (!Arrays.deepEquals(temp, numBoard)) {
             return false;
         }
-
-        System.out.println("in2");
 
         return true;
     }
@@ -274,9 +257,17 @@ public class GameCourt extends JPanel {
      * reset the game to its initial state
      */
     public void reset() {
-        // TODO: empties the board
-        // TODO: randomize a 2 somewhere on the board
         // Make sure that this component has the keyboard focus
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                numBoard[i][j] = 0;
+            }
+        }
+        generateRandomTwo();
+        currScore = 0;
+        listener.onUpdate(currScore);
+        listener.result("Running...");
+        repaint();
         requestFocusInWindow();
     }
 
@@ -296,13 +287,6 @@ public class GameCourt extends JPanel {
 
         // Draws board grid
         g.setColor(new Color(187, 173, 160));
-//        g.drawLine(NumberedTile.SIZE, 0, NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-//        g.drawLine(2 * NumberedTile.SIZE, 0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-//        g.drawLine(3 * NumberedTile.SIZE, 0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE);
-//        g.drawLine(0, NumberedTile.SIZE, 4 * NumberedTile.SIZE, NumberedTile.SIZE);
-//        g.drawLine(0, 2 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 2 * NumberedTile.SIZE);
-//        g.drawLine(0, 3 * NumberedTile.SIZE, 4 * NumberedTile.SIZE, 3 * NumberedTile.SIZE);
-
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -330,9 +314,8 @@ public class GameCourt extends JPanel {
         return new Dimension(COURT_WIDTH, COURT_HEIGHT);
     }
 
-    private void testTile() {
-        numBoard[0][0] = 2;
-        numBoard[1][1] = 4;
+    private void initialBoard() {
+        generateRandomTwo();
     }
 }
 

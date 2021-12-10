@@ -2,14 +2,12 @@ package org.cis120.twentyfortyeight;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Paths;
 
 
 public class RunTwentyFortyEight implements Runnable, ScoreListener {
-    static final String PATH_TO_OUTPUT = "highest_score.txt";
+    static final String PATH_TO_OUTPUT = "files/highest_score.txt";
     private int highestScore;
     private JLabel highScoreLabel;
     private JLabel currScoreLabel;
@@ -32,7 +30,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         status_panel.add(status);
 
         // Main playing area
-        final org.cis120.twentyfortyeight.GameCourt court = new GameCourt(status);
+        final org.cis120.twentyfortyeight.GameCourt court = new GameCourt();
         court.addScoreListener(this);
         frame.add(court, BorderLayout.CENTER);
 
@@ -41,7 +39,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         final JPanel control_panel = new JPanel();
         frame.add(control_panel, BorderLayout.NORTH);
 
-        readHighScore(court);
+        readHighScore();
 
 
         // Note here that when we add an action listener to the reset button, we
@@ -49,11 +47,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         // ActionListener with its actionPerformed() method overridden. When the
         // button is pressed, actionPerformed() will be called.
         final JButton reset = new JButton("Reset");
-        reset.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                court.reset();
-            }
-        });
+        reset.addActionListener(e -> court.reset());
         highScoreLabel = new JLabel("Highest Score: " + highestScore);
         currScoreLabel = new JLabel("Current Score: " + 0);
 
@@ -72,10 +66,10 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         }
 
         // Start game
-        court.reset();
+        court.requestFocusInWindow();
     }
 
-    private void readHighScore(GameCourt court) {
+    private void readHighScore() {
         // highest score tracker
         File tempFile = new File(PATH_TO_OUTPUT);
         if (tempFile.exists()) {
@@ -83,24 +77,13 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
                 BufferedReader br = new BufferedReader(new FileReader(PATH_TO_OUTPUT));
                 String str = br.readLine();
                 try {
-                    highestScore = Integer.valueOf(str);
+                    highestScore = Integer.parseInt(str);
                 } catch (NumberFormatException e) {
                     highestScore = 0;
                 }
-                int[][] board = new int[4][4];
-                for (int i = 0; i < 4; i++) {
-                    str = br.readLine();
-                    String[] array = str.split(",");
-                    for (int j = 0; j < 4; j++) {
-                        board[i][j] = Integer.valueOf(array[j]);
-                    }
-                }
-                court.readUserData(board);
+
                 System.out.println("highest = " + highestScore);
-                //updateHighestScore(court);
                 br.close();
-                //}
-                //JLabel highestScore = new JLabel("Highest Score = " + highest.read());
             } catch (FileNotFoundException e) {
                 System.out.println("Ran into FileNotFound Exception");
             } catch (IOException e) {
@@ -109,7 +92,6 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         } else {
             try {
                 tempFile.createNewFile();
-                //JLabel highestScore = new JLabel("Highest Score = " + currScore);
             } catch (IOException e) {
                 System.out.println("Ran into I/O Exception2");
             }
@@ -118,7 +100,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
 
     private void updateHighestScore() {
         File file = Paths.get(PATH_TO_OUTPUT).toFile();
-        BufferedWriter bw = null;
+        BufferedWriter bw;
         try {
             bw = new BufferedWriter(new FileWriter(file));
             String str = Integer.toString(highestScore);
@@ -138,7 +120,6 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
             System.out.println("Curr = " + currScore + ", High = " + highestScore);
             updateHighestScore();
             highScoreLabel.setText("Highest Score: " + highestScore);
-            //System.out.println("Curr = " + currScore + ", High = " + highestScore);
         }
     }
 

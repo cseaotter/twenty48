@@ -16,35 +16,16 @@ public abstract class Tile {
     /* Size of object, in pixels. */
     private int size;
 
-    /* Velocity: number of pixels to move every time move() is called. */
-    private int vx;
-    private int vy;
-
-    /*
-     * Upper bounds of the area in which the object can be positioned. Maximum
-     * permissible x, y positions for the upper-left hand corner of the object.
-     */
-    private int maxX;
-    private int maxY;
-
 
     /**
      * Constructor
      */
     public Tile(
-            int vx, int vy, int px, int py, int size, int courtWidth,
-            int courtHeight
+            int px, int py, int size
     ) {
-        this.vx = vx;
-        this.vy = vy;
         this.px = px;
         this.py = py;
         this.size = size;
-
-        // take the width and height into account when setting the bounds for
-        // the upper left corner of the object.
-        this.maxX = courtWidth - size;
-        this.maxY = courtHeight - size;
 
     }
 
@@ -59,14 +40,6 @@ public abstract class Tile {
         return this.py;
     }
 
-    public int getVx() {
-        return this.vx;
-    }
-
-    public int getVy() {
-        return this.vy;
-    }
-
     public int getSize() {
         return this.size;
     }
@@ -77,68 +50,10 @@ public abstract class Tile {
      **************************************************************************/
     public void setPx(int px) {
         this.px = px;
-        clip();
     }
 
     public void setPy(int py) {
         this.py = py;
-        clip();
-    }
-
-    public void setVx(int vx) {
-        this.vx = vx;
-    }
-
-    public void setVy(int vy) {
-        this.vy = vy;
-    }
-
-    /**************************************************************************
-     * UPDATES AND OTHER METHODS
-     **************************************************************************/
-
-    /**
-     * Prevents the object from going outside of the bounds of the area
-     * designated for the object (i.e. Object cannot go outside of the active
-     * area the user defines for it).
-     */
-    private void clip() {
-        this.px = Math.min(Math.max(this.px, 0), this.maxX);
-        this.py = Math.min(Math.max(this.py, 0), this.maxY);
-    }
-
-    /**
-     * Moves the object by its velocity. Ensures that the object does not go
-     * outside its bounds by clipping.
-     */
-    public void move() {
-        this.px += this.vx;
-        this.py += this.vy;
-
-        clip();
-    }
-
-
-    /**
-     * Determine whether the game object will hit a wall in the next time step.
-     * If so, return the direction of the wall in relation to this game object.
-     *
-     * @return Direction of impending wall, null if all clear.
-     */
-    public org.cis120.twentyfortyeight.Direction hitWall() {
-        if (this.px + this.vx < 0) {
-            return org.cis120.twentyfortyeight.Direction.LEFT; //TODO why is it left? shouldn't it be right?
-        } else if (this.px + this.vx > this.maxX) {
-            return org.cis120.twentyfortyeight.Direction.RIGHT;
-        }
-
-        if (this.py + this.vy < 0) {
-            return org.cis120.twentyfortyeight.Direction.UP;
-        } else if (this.py + this.vy > this.maxY) {
-            return org.cis120.twentyfortyeight.Direction.DOWN;
-        } else {
-            return null;
-        }
     }
 
 
