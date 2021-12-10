@@ -9,7 +9,7 @@ public class Game {
      * include a main method in your final submission.
      */
     public static void main(String[] args) {
-        Runnable game = new org.cis120.twentyfortyeight.RunTwentyFortyEight();
+        Runnable game = new org.cis120.twentyfortyeight.GameInstruction();
         SwingUtilities.invokeLater(game);
     }
 }
