@@ -20,7 +20,7 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
 
         // Top-level frame in which game components live.
         // Be sure to change "TOP LEVEL FRAME" to the name of your game
-        final JFrame frame = new JFrame("TOP LEVEL FRAME");
+        final JFrame frame = new JFrame("2048");
         frame.setLocation(400, 400);
 
         // Status panel
