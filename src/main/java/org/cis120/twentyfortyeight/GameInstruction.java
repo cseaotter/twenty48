@@ -2,33 +2,34 @@ package org.cis120.twentyfortyeight;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.nio.file.Paths;
 
-
+/**
+ * This class is responsible for the game instruction window that pops up when I run the game.
+ * After I press "start game" button, it will run the RunTwentyFortyEight class and run the game.
+ */
 public class GameInstruction implements Runnable {
     private final JFrame frame = new JFrame("2048");
-    public void run() {
-        // NOTE : recall that the 'final' keyword notes immutability even for
-        // local variables.
 
-        // Top-level frame in which game components live.
-        // Be sure to change "TOP LEVEL FRAME" to the name of your game
+    /**
+     * Runs the game instruction window. Displays instruction text and start game button.
+     */
+    public void run() {
         frame.setLocation(400, 400);
-        frame.setSize(600, 600);
+        frame.setSize(600, 400);
 
         // Status panel
         final JPanel instructorPanel = new JPanel();
         frame.add(instructorPanel, BorderLayout.CENTER);
 
-        JLabel label = new JLabel("<html>Welcome to 2048!<br>" + "<html> <br>"
-                + "<html>Instructions:<br>"
-                + "<html>1. Press start game button to start the game<br>"
-                + "<html>2. Use keyboard directions (eg: up) to move the numbered tiles in the direction you want<br>"
-                + "<html>3. When two tiles with the same number collide, they merge into one tile with their sum<br>"
-                + "<html>4. When you cannot move any tiles, you lose<br>"
-                + "<html>5. You can press the reset button to reset the game<br>"
-        );
+        JLabel label = new JLabel("<html>Welcome to 2048!<br>" + "<br>"
+                + "Instructions:<br>"
+                + "1. Press start game button to start the game<br>"
+                + "2. Use keyboard directions (eg: up) to move the numbered tiles in the direction you want<br>"
+                + "3. When two tiles with the same number collide, they merge into one tile with their sum<br>"
+                + "4. When you cannot move any tiles, you lose<br>"
+                + "5. You can press the reset button to reset the game</html>");
+
+        label.setFont(new Font("TimesRoman", Font.PLAIN, 12));
         instructorPanel.add(label, BorderLayout.CENTER);
 
         final JPanel statusPanel = new JPanel();
@@ -43,6 +44,10 @@ public class GameInstruction implements Runnable {
         frame.setVisible(true);
     }
 
+    /**
+     * When the start game button is pressed, this method will run the RunTwentyFortyEight class
+     * to start the game.
+     */
     private void startGame() {
         Runnable game = new org.cis120.twentyfortyeight.RunTwentyFortyEight();
         SwingUtilities.invokeLater(game);

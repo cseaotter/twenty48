@@ -18,7 +18,11 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-
+/**
+ * The GameCourt class implements the overall game logic and event-handling from the GUI. There is also the
+ * logic of how to calculate and update scores and the numbers in the squares. It handles keyboard
+ * events (eg: up) to trigger board updates.
+ */
 public class GameCourt extends JPanel {
     public static final int COURT_WIDTH = 600;
     public static final int COURT_HEIGHT = 600;
@@ -30,6 +34,9 @@ public class GameCourt extends JPanel {
     private int currScore;
     private ScoreListener listener;
 
+    /**
+     * This is the GameCourt constructor. Handles all events and logics.
+     */
     public GameCourt() {
         // creates border around the court area, JComponent method
         setBorder(BorderFactory.createLineBorder(new Color(187, 173, 160)));
@@ -41,7 +48,7 @@ public class GameCourt extends JPanel {
         // Make sure that this component has the keyboard focus
         requestFocusInWindow();
 
-        numInMap(); // TODO: idk where to put it??
+        numInMap();
         initialBoard();
 
         // This key listener allows the square to move as long as an arrow key
@@ -49,6 +56,10 @@ public class GameCourt extends JPanel {
         // method below actually moves the square.)
         addKeyListener(new KeyAdapter() {
 
+            /**
+             * Handles keyboard events.
+             * @param e KeyEvent
+             */
             public void keyPressed(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -67,16 +78,22 @@ public class GameCourt extends JPanel {
 
                 repaint();
             }
-
-            public void keyReleased(KeyEvent e) {
-            }
         });
     }
 
+    /**
+     * Add score listener.
+     * @param listener ScoreListener
+     */
     public void addScoreListener(ScoreListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Move the tiles to the left of board when left key is pressed.
+     * @param numBoard the current state of the game board
+     * @param detect true if running this method is to check to see if there can be a valid move
+     */
     private void onKeyLeft(int[][] numBoard, boolean detect) {
         boolean hasMoved = false;
         for (int r = 0; r < 4; r++) {
@@ -123,24 +140,43 @@ public class GameCourt extends JPanel {
         }
     }
 
+    /**
+     * Move the tiles to the right of board when right key is pressed.
+     * @param numBoard the current state of the game board
+     * @param detect true if running this method is to check to see if there can be a valid move
+     */
     private void onKeyRight(int[][] numBoard, boolean detect) {
         rotateDown(numBoard);
         onKeyLeft(numBoard, detect);
         rotateDown(numBoard);
     }
 
+    /**
+     * Move the tiles to the top of board when up key is pressed.
+     * @param numBoard the current state of the game board
+     * @param detect true if running this method is to check to see if there can be a valid move
+     */
     private void onKeyUp(int[][] numBoard, boolean detect) {
         rotateLeft(numBoard);
         onKeyLeft(numBoard, detect);
         rotateRight(numBoard);
     }
 
+    /**
+     * Move the tiles to the bottom of board when down key is pressed.
+     * @param numBoard the current state of the game board
+     * @param detect true if running this method is to check to see if there can be a valid move
+     */
     private void onKeyDown(int[][] numBoard, boolean detect) {
         rotateRight(numBoard);
         onKeyLeft(numBoard, detect);
         rotateLeft(numBoard);
     }
 
+    /**
+     * Rotate the 2D array to the right (90 degrees).
+     * @param board the 4x4 game board
+     */
     private void rotateRight(int[][] board) {
         int rows = board.length;
         int cols = board[0].length;
@@ -161,19 +197,29 @@ public class GameCourt extends JPanel {
         }
     }
 
+    /**
+     * Rotate the 2D array to the left (90 degrees).
+     * @param board the 4x4 game board
+     */
     private void rotateLeft(int[][] board) {
         for (int i = 0; i < 3; i++) {
             rotateRight(board);
         }
     }
 
+    /**
+     * Rotate the 2D array 180 degrees.
+     * @param board the 4x4 game board
+     */
     private void rotateDown(int[][] board) {
         for (int i = 0; i < 2; i++) {
             rotateRight(board);
         }
     }
 
-
+    /**
+     * Adds the possible numbers and tiles to the map that stores the information about tiles.
+     */
     private void numInMap() {
         map.put(0, new EmptyTile());
         map.put(2, new NumberedTile(new Color(238, 228, 218), 2));
@@ -196,7 +242,6 @@ public class GameCourt extends JPanel {
 
     /**
      * Everywhere on the 4x4 board is filled with a number
-     *
      * @return true if the board is full
      */
     private boolean isFull() {
@@ -210,6 +255,10 @@ public class GameCourt extends JPanel {
         return true;
     }
 
+    /**
+     * Determines whether the user or current game has lost.
+     * @return true if the user has lost
+     */
     public boolean hasLost() {
         if (!isFull()) {
             return false;
@@ -234,6 +283,9 @@ public class GameCourt extends JPanel {
         return true;
     }
 
+    /**
+     * Generate the number 2 tile randomly on an empty space of the game.
+     */
     public void generateRandomTwo() {
         if (isFull()) {
             return;
@@ -284,21 +336,13 @@ public class GameCourt extends JPanel {
 
     /**
      * Draws the game board.
-     * <p>
-     * There are many ways to draw a game board. This approach
-     * will not be sufficient for most games, because it is not
-     * modular. All of the logic for drawing the game board is
-     * in this method, and it does not take advantage of helper
-     * methods. Consider breaking up your paintComponent logic
-     * into multiple methods or classes, like Mushroom of Doom.
      */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // Draws board grid
         g.setColor(new Color(187, 173, 160));
 
+        // Draws the tiles
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int num = numBoard[i][j];
@@ -306,6 +350,8 @@ public class GameCourt extends JPanel {
                 tile.draw(g, j * NumberedTile.SIZE, i * NumberedTile.SIZE);
             }
         }
+
+        // Draws the borders of the grid
         g.setColor(new Color(187, 173, 160));
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(THICKNESS));
@@ -323,6 +369,9 @@ public class GameCourt extends JPanel {
         return new Dimension(COURT_WIDTH, COURT_HEIGHT);
     }
 
+    /**
+     * This is the initial board state. Generates a random 2 tile when the game starts or resets.
+     */
     private void initialBoard() {
         generateRandomTwo();
     }

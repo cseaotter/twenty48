@@ -5,7 +5,11 @@ import java.awt.*;
 import java.io.*;
 import java.nio.file.Paths;
 
-
+/**
+ * This class maintains the global panel and layout of the game. It handles user data, reads the
+ * highest past score, and determines whether to rewrite it or not depending on the current scores.
+ * It implements and keeps track of the current and highest scores, and the current game status.
+ */
 public class RunTwentyFortyEight implements Runnable, ScoreListener {
     static final String PATH_TO_OUTPUT = "files/highest_score.txt";
     private int highestScore;
@@ -13,7 +17,9 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
     private JLabel currScoreLabel;
     private JLabel status;
 
-
+    /**
+     * Runs the game. Displays the game court, scores, and reset button.
+     */
     public void run() {
         // NOTE : recall that the 'final' keyword notes immutability even for
         // local variables.
@@ -69,6 +75,9 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         court.requestFocusInWindow();
     }
 
+    /**
+     * Reads the highest score from the highest_score.txt file.
+     */
     private void readHighScore() {
         // highest score tracker
         File tempFile = new File(PATH_TO_OUTPUT);
@@ -98,6 +107,9 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         }
     }
 
+    /**
+     * Updates the highest score to and writes it on the highest_score.txt file.
+     */
     private void updateHighestScore() {
         File file = Paths.get(PATH_TO_OUTPUT).toFile();
         BufferedWriter bw;
@@ -112,6 +124,11 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         }
     }
 
+    /**
+     * Updates the current score to the currScoreLabel. If current score is higher than the highest
+     * score, then updates it as the current score and changes the highScoreLabel too.
+     * @param currScore current score of the game
+     */
     @Override
     public void onUpdate(int currScore) {
         currScoreLabel.setText("Current Score: " + currScore);
@@ -123,6 +140,10 @@ public class RunTwentyFortyEight implements Runnable, ScoreListener {
         }
     }
 
+    /**
+     * Updates the result of the game to status, which displays at the bottom of the window.
+     * @param res result of the game, whether it has lost or not
+     */
     @Override
     public void result(String res) {
         status.setText(res);

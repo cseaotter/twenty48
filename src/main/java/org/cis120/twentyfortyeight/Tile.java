@@ -2,13 +2,13 @@ package org.cis120.twentyfortyeight;
 
 import java.awt.*;
 
+/**
+ * This is an abstract class that provides basic functions, such as position setters, for tiles.
+ */
 public abstract class Tile {
     /*
      * Current position of the object (in terms of graphics coordinates)
-     *
-     * Coordinates are given by the upper-left hand corner of the object. This
-     * position should always be within bounds:
-     * 0 <= px <= maxX 0 <= py <= maxY
+     * Coordinates are given by the upper-left hand corner of the object.
      */
     private int px;
     private int py;
@@ -66,6 +66,8 @@ public abstract class Tile {
      *          Remember graphics contexts that we used in OCaml, it gives the
      *          context in which the object should be drawn (a canvas, a frame,
      *          etc.)
+     * @param offsetX the offset on the x direction of the starting position of tile
+     * @param offsetY the offset on the y direction of the starting position of tile
      */
     public abstract void draw(Graphics g, int offsetX, int offsetY);
 }
