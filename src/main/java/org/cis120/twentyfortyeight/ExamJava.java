@@ -2,7 +2,9 @@ package org.cis120.twentyfortyeight;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class ExamJava {
     public static class sp19 {
@@ -123,6 +125,41 @@ public class ExamJava {
             while (filterIterator.hasNext()) {
                 System.out.println(filterIterator.next());
             }
+        }
+
+        public static class Student implements Comparable<Student> {
+            private int id;
+            private String name;
+            private String major;
+
+            public Student(int id, String name, String major) {
+                this.id = id;
+                this.name = name;
+                this.major = major;
+            }
+
+            @Override
+            public int compareTo(Student o) {
+                return id - o.id;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                Student other = (Student) o;
+                return other.id == id && other.name.equals(name) && other.major.equals(major);
+            }
+        }
+
+        public static void test1() {
+            LinkedList<Student> l = new LinkedList<Student>();
+            l.add(new Student(1610, "Yakkety Yak", "CSCI"));
+            boolean result = l.contains(new Student(1610, "Yakkety Yak", "CSCI"));
+            System.out.println("l.contains : " + result);
+        }
+
+        public static void test2() {
+            TreeSet<Student> s = new TreeSet<>();
+            s.add(new Student(606, "Dapper Drake", "MSE"));
         }
     }
 }

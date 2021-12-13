@@ -13,8 +13,10 @@ public class Game {
     public static void main(String[] args) {
         //Runnable game = new org.cis120.twentyfortyeight.GameInstruction();
         //SwingUtilities.invokeLater(game);
-        ExamJava.sp19.m1();
-        ExamJava.sp19.testIforAll();
-        ExamJava.sp19.testFilterIterator();
+        //ExamJava.sp19.m1();
+        //ExamJava.sp19.testIforAll();
+        //ExamJava.sp19.testFilterIterator();
+        ExamJava.sp19.test1();
+        ExamJava.sp19.test2();
     }
 }
