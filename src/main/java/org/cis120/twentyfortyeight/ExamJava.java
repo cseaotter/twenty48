@@ -1,9 +1,11 @@
 package org.cis120.twentyfortyeight;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 public class ExamJava {
@@ -88,6 +90,7 @@ public class ExamJava {
             public FilterIterator(Iterator<A> b, Predicate<A> p) {
                 this.b = b;
                 this.p = p;
+                current = null;
             }
 
             public boolean hasNext() {
@@ -128,7 +131,8 @@ public class ExamJava {
         }
 
         public static class Student implements Comparable<Student> {
-            private int id;
+            public static int code;
+            public int id;
             private String name;
             private String major;
 
@@ -136,6 +140,7 @@ public class ExamJava {
                 this.id = id;
                 this.name = name;
                 this.major = major;
+                code = 20;
             }
 
             @Override
@@ -146,7 +151,24 @@ public class ExamJava {
             @Override
             public boolean equals(Object o) {
                 Student other = (Student) o;
-                return other.id == id && other.name.equals(name) && other.major.equals(major);
+                return o == this || other.id == id && other.name.equals(name) && other.major.equals(major);
+            }
+
+            public int getId(Student student) {
+                return student.id;
+            }
+        }
+
+        public static class StudentA extends Student {
+            private int passwd;
+
+            public StudentA(int id, String name, String major) {
+                super(id, name, major);
+            }
+
+            @Override
+            public int getId(Student student) {
+                return student.id;
             }
         }
 
@@ -160,6 +182,24 @@ public class ExamJava {
         public static void test2() {
             TreeSet<Student> s = new TreeSet<>();
             s.add(new Student(606, "Dapper Drake", "MSE"));
+            Student a = new Student(1, "1", "1");
+            StudentA b = new StudentA(2, "2", "1");
+            //System.out.println("case 1: " + a.code + ":" + b.code);
+            //b.code = 30;
+            //System.out.println("case 2: " + a.code + ":" + b.code);
+
+            System.out.println(((Student) b).id);
+            System.out.println(((StudentA) a).id);
+            String a1 = "test22433";
+            String b2 = "eheejeje";
+            a1.hashCode();
+            // a1 -> 200;
+            // b1 -> 300;
+            // c1 = "tewsttknenneneneene"; -> 200;
+            // 200 -> LinkList -> (a1, c1, d1)
+            Map<String, String> map = new HashMap<>();
+            map.put("a1", "b2");
+
         }
     }
 }
