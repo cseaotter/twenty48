@@ -20,6 +20,7 @@ public class Game {
 //        ExamJava.sp19.test2();
         //ExamJava.sp16.testIJ();
         //ExamJava.fa19.test();
-        ExamJava.OnOff.test();
+        //ExamJava.OnOff.test();
+        ExamJava.sp20_1.test();
     }
 }

@@ -533,7 +533,66 @@ public class ExamJava {
                 List<Circle> list = iter.next();
                 Iterator<Circle> it = list.iterator();
             }
-            
+
+        }
+    }
+
+    public static class sp20_1 {
+        public static interface A {
+            void test();
+        }
+
+        public static interface A1 extends A {
+            void test1();
+        }
+
+
+        public static abstract class B {
+            abstract void test();
+        }
+
+        public static abstract class B1 {
+            abstract void test1();
+        }
+
+        public static class C implements A, A1 {
+            public void test() {
+                Map<Integer, A> map = new HashMap<>();
+                A a = new A1() {
+                    @Override
+                    public void test1() {
+                        System.out.println("A1 test1");
+
+                    }
+
+                    @Override
+                    public void test() {
+                        System.out.println("A2 test1");
+                    }
+                };
+//                map.put(0, a);
+//                map.put(1, this);
+
+                B b = new B() {
+                    @Override
+                    void test() {
+                        System.out.println("B");
+                    }
+                };
+
+                a.test();
+                ((A1)a).test1();
+                b.test();
+            }
+
+            public void test1() {
+
+            }
+        }
+
+        public static void test() {
+            C c  = new C();
+            c.test();
         }
     }
 }
