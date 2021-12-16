@@ -2,7 +2,7 @@ package org.cis120;
 
 import org.cis120.twentyfortyeight.ExamJava;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Game {
     /**
@@ -16,7 +16,10 @@ public class Game {
         //ExamJava.sp19.m1();
         //ExamJava.sp19.testIforAll();
         //ExamJava.sp19.testFilterIterator();
-        ExamJava.sp19.test1();
-        ExamJava.sp19.test2();
+//        ExamJava.sp19.test1();
+//        ExamJava.sp19.test2();
+        //ExamJava.sp16.testIJ();
+        //ExamJava.fa19.test();
+        ExamJava.OnOff.test();
     }
 }
